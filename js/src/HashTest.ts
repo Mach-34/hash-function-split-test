@@ -127,8 +127,8 @@ export class HashTestContract extends ContractBase {
     /** constructor() */
     constructor: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
 
-    /** get_hash() */
-    get_hash: (() => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+    /** get_hash(at: integer) */
+    get_hash: ((at: (bigint | number)) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
 
     /** hash(len: integer) */
     hash: ((len: (bigint | number)) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;

@@ -48,10 +48,13 @@ describe("Test deposit to zimburse", () => {
   });
 
   it("Attempt to load PXE", async () => {
-    // // get capsule to load
-    // const inputs = await generateEmailVerifierInputs(email);
-    const preimage = makePreimage(191); //53248
-    const capsules = breakIntoCapsules(preimage, 512, 64);
+    // parameters for hashing
+    const dataLength = 50129;  //53248
+    const chunkLength = 2048;
+    
+    // load capsules into pxe
+    const preimage = makePreimage(dataLength);
+    const capsules = breakIntoCapsules(preimage, 53248, chunkLength);
     for (const capsule of capsules) {
       await account.addCapsule(capsule);
     }
@@ -60,17 +63,23 @@ describe("Test deposit to zimburse", () => {
     await instance.methods.hash(preimage.length).send().wait();
     
     // check hash output
-    const storedHash = await instance.methods.get_hash().simulate();
+    const storedHash = await instance.methods.get_hash(preimage.length).simulate();
+    console.log("end", Date.now() - start);
     const hashParsed = Buffer.from(storedHash.map((x: bigint) => Number(x))).toString('hex');
     console.log("Stored hash: ", hashParsed);
+
+    const buffer = Buffer.from(preimage);
+    const expectedHash = crypto.createHash('sha256').update(buffer).digest('hex');
+    console.log("Expected hash: ", expectedHash);
+    expect(hashParsed).toBe(expectedHash);
   })
 
-  it("Fake Hash", async () => {
+  xit("Fake Hash", async () => {
     const data: number[] = [];
     for (let i = 0; i < 191; i++)
       data.push(i % 256);
     const padded = padZeroes(data, 512);
-    const hash = await instance.methods.hash_demo(padded, 191).simulate();
+    const hash = await instance.methods.hash_demo(padded, 191 ).simulate();
     const hashParsed = Buffer.from(hash.map((x: bigint) => Number(x))).toString('hex');
     console.log("Hash from contract: ", hashParsed);
     const buffer = Buffer.from(data);

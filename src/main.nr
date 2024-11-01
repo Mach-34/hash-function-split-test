@@ -3,22 +3,8 @@ use aztec::macros::aztec;
 mod capsule;
 mod hash_store;
 
-global MAX_CHUNK_LENGTH: u32 = 64;
-global MAX_DATA_LENGTH: u32 = 192;
+global MAX_CHUNK_LENGTH: u32 = 2048;
 
-global EXPECTED_HASH_LONG = [
-      192, 253, 214,  59,  76, 100,  61, 106,
-      140,  28, 232, 105,  66, 162,  17,  94,
-       43,  60, 133,  32, 127,  71, 231, 169,
-       17,  24, 156,  72, 133,   6, 123,   1
-    ];
-
-global EXPECTED_HASH_SHORT = [
-      152, 138, 209, 226, 113, 121, 133,  44,
-      132,  28,  51,  47, 211, 250, 245, 159,
-        4, 212, 165, 219,  80,   1,  96,  12,
-      207, 146,  72, 212, 138,  53,  66, 199
-    ];
 
 unconstrained pub fn last_chunk_len(len: u32) -> u32 {
     // determine how many chunks are available
@@ -46,7 +32,7 @@ contract HashTest {
         },
         note::constants::MAX_NOTES_PER_PAGE,
         oracle::{random::random, debug_log::debug_log_format},
-        prelude::{AztecAddress, SharedImmutable},
+        prelude::{AztecAddress, Map, SharedImmutable},
         protocol_types::traits::Serialize,
     };
     use zkemail::partial_hash::{
@@ -56,8 +42,6 @@ contract HashTest {
     };
     use crate::{
         MAX_CHUNK_LENGTH,
-        EXPECTED_HASH_LONG,
-        EXPECTED_HASH_SHORT,
         capsule::{pop_capsule, to_u8},
         hash_store::HashStore,
         last_chunk_len
@@ -66,7 +50,7 @@ contract HashTest {
 
     #[storage]
     struct Storage<Context> {
-        hash_store: SharedImmutable<HashStore, Context>,
+        hash_store: Map<u32, SharedImmutable<HashStore, Context>, Context>
     }
 
     #[public]
@@ -103,7 +87,7 @@ contract HashTest {
         // assert(final_hash == EXPECTED_HASH_SHORT, "Hash does not match expected hash");
 
         HashTest::at(context.this_address())
-            .set_hash(final_hash)
+            .set_hash(len, final_hash)
             .enqueue(&mut context);
     }
 
@@ -155,12 +139,12 @@ contract HashTest {
 
     #[public]
     #[internal]
-    fn set_hash(hash: [u8; 32]) {
-        storage.hash_store.initialize(HashStore { hash });
+    fn set_hash(len: u32, hash: [u8; 32]) {
+        storage.hash_store.at(len).initialize(HashStore { hash });
     }
 
-    unconstrained pub fn get_hash() -> [u8; 32] {
-        storage.hash_store.read_public().hash
+    unconstrained pub fn get_hash(at: u32) -> [u8; 32] {
+        storage.hash_store.at(at).read_public().hash
     }
 
     unconstrained pub fn hash_demo(data: [u8; 512], length: u64) -> [u8; 32] {

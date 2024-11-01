@@ -5,9 +5,7 @@
   "types": "dist",
   "license": "MIT",
   "scripts": {
-    "compile": "yarn compile:circuits true && yarn compile:contracts",
-    "compile:contracts": "./scripts/artifacts.sh",
-    "test": "NODE_NO_WARNINGS=1 node --experimental-vm-modules $(yarn bin jest) --config jest.integration.config.json --no-cache --runInBand --verbose",
+    "test": "NODE_NO_WARNINGS=1 node --experimental-vm-modules $(yarn bin jest) --config jest.integration.config.json --no-cache --runInBand --verbose tests/hash.test.ts",
     "sandbox": "aztec sandbox"
   },
   "devDependencies": {
