@@ -1,0 +1,88 @@
+Delivered-To: jp4g@mach34.space
+Received: by 2002:a2e:7a11:0:b0:2ee:87bb:ea12 with SMTP id v17csp1219375ljc;
+        Sun, 1 Sep 2024 20:22:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6gqLRIZh+hTL0mtjqUB2mQaPQFa27kWnjzq2pdj2DBEdXEF3lzC1Iuepsn2ymEZ8z5eaN
+X-Received: by 2002:a05:6808:22a1:b0:3e0:657:29d7 with SMTP id 5614622812f47-3e00657321emr1676602b6e.0.1725247332850;
+        Sun, 01 Sep 2024 20:22:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1725247332; cv=none;
+        d=google.com; s=arc-20240605;
+        b=aEJG5OusGib0EL5ysJBArbOdoaU+5VAPID9OyewlRyynLBbayi8GAn8IjNIvlI8ce3
+         vYm/s5qY+6LFFeMMKjCLtjlKKdDScPHPK6YcSffGXtzuZUlIoERq288R377speXY7rxa
+         BwWDFvTPFkF72Y4gY45cTcz96EsPW4gfBcptox2gSV5u92H58sdanRmYe/+LSII4NjJn
+         geR7yiitAjOH6jLkRa9FhU7Cqcvb5kpTrNFgFtxzhLaq/8SxpAXCei4tRc0afMQWOo5a
+         J/ebPBKc9WTuc8hdwiuSALn1Pxl2UYcPOgZfMyeV46orV3jbMOAXY2DNo7/FLz6ohtce
+         hvLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:mime-version:subject:message-id:to:from
+         :dkim-signature:date;
+        bh=EWwjo8O5gGppp3mm+JSNYKJAcDdd8nWQEJb0FEiKhUg=;
+        fh=/UiB2TKkNsVh8Akg/aVj9qh9F8S0nHZysRDTIrEXKZE=;
+        b=EN0HVebJdBQpPG+ehjcalgBeoJoyXeZnKLnPPSd4rGNDPjfPaExnEWbKrXFfkwHesE
+         8ZOMDYPBJjnCvKYR/3iKtVzqtasfimsI6biNmiQkqmTeDrw8PC7us8yGDCB/ibR6yU17
+         EPw/TiWYUOQu3ZkukwcTDMNF6whtzIT4xkMvcZVsUoHC8RRb9c+HmfM4hCVO6F+Sbsw3
+         AS2W7m2KwittVEz35/RfyNWRFYzgTOACULRT6DSnwEbl6WMUj+GAjIELUKeYpdPJfAqQ
+         vjGjlujwEvDx6G+5yaLypPOK4nrVbL0oKinkQlwY8iw7QHSRcRQs3VzJS8JJypuKg5x9
+         9xkg==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@linode.com header.s=k1 header.b=mAX8457n;
+       spf=pass (google.com: domain of bounces@linode.com designates 173.255.198.11 as permitted sender) smtp.mailfrom=bounces@linode.com;
+       dmarc=pass (p=REJECT sp=QUARANTINE dis=NONE) header.from=linode.com
+Return-Path: <bounces@linode.com>
+Received: from outbound-mail2.linode.com (outbound-mail2.linode.com. [173.255.198.11])
+        by mx.google.com with ESMTPS id 5614622812f47-3df11850cf7si3182136b6e.294.2024.09.01.20.22.12
+        for <jp4g@mach34.space>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 01 Sep 2024 20:22:12 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bounces@linode.com designates 173.255.198.11 as permitted sender) client-ip=173.255.198.11;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@linode.com header.s=k1 header.b=mAX8457n;
+       spf=pass (google.com: domain of bounces@linode.com designates 173.255.198.11 as permitted sender) smtp.mailfrom=bounces@linode.com;
+       dmarc=pass (p=REJECT sp=QUARANTINE dis=NONE) header.from=linode.com
+Date: Sun, 1 Sep 2024 23:22:12 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linode.com; s=k1;
+	t=1725247332; bh=NSimMiLzHUNDlm2Qb5k41Im42h/3xPYWjpndqxOBovg=;
+	h=Date:From:To:Subject:From;
+	b=mAX8457nNStw3JcmnCcAjaYlk2w8xWfn1M55dCz8yWPvPfhBj7OkrUaBPdeU4Jbf9
+	 dBqG6rfsPtnQdzoyoBSwkSK16j+ogf5xK+RDUutyXGfwBCl5Y7/oO46Uis8CSdB2DK
+	 zsJcf4OIhJLG4UGImyHEUblFTEy/8LNvf1Mmn2uvQ4zm/7lkjQu4YEQ0HcuxsYNInE
+	 IT0iQCmn1gtqv7EqmDdKJahpXYyo2Apy1mdwoei9VCj1vIWVnCBfSI/W0Kw/5M1T1U
+	 /nGddqwRTiMoaDj+aO/H+Jh78/zj5OT7xBaeUdZhScrU/gyYwyIp7nfePysFYgns1i
+	 LcOatJr0SQGGg==
+From: billing@linode.com
+To: jp4g@mach34.space
+Message-ID: <555403002.3249796.1725247332417@outbound.mail.linode.com>
+Subject: Linode.com: Payment Receipt [17411904]
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: ColdFusion 2021 Application Server
+
+
+Company Name: 
+Payment Number: 17411904
+Payment Date: September 01, 2024
+Payment Card: 0034
+
+This is your receipt of payment against your credit card in the 
+amount of $22.00.
+
+Thank you.
+
+Please note that charges will appear as "Linode*Akamai" on your
+credit card's statement.
+
+For account information and current balance, please visit the
+Linode Manager at https://cloud.linode.com/
+
+If you have any questions or concerns, please open a support ticket. 
+
+Sincerely,
+
+The Linode Team
+
+---------------------------------------------------------------------------
+http://www.linode.com/ - Linux Cloud Hosting
+
+Please note that effective July 01, 2022, charges for Linode services may
+appear as "Linode*Akamai" with your bank or credit card.
